@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace banking.Controllers;
@@ -18,6 +19,7 @@ public class WeatherForecastController : ControllerBase
         _logger = logger;
     }
 
+    [Authorize(Roles = "User")]
     [HttpGet(Name = "GetWeatherForecast")]
     public IEnumerable<WeatherForecast> Get()
     {

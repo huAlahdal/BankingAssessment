@@ -1,11 +1,12 @@
 {
   "version": 2,
-  "dgSpecHash": "qPfkkBVQSm8=",
+  "dgSpecHash": "tuHZGGDHiQY=",
   "success": true,
   "projectFilePath": "C:\\Users\\bLinK\\Documents\\banking\\banking.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\bLinK\\.nuget\\packages\\automapper\\13.0.1\\automapper.13.0.1.nupkg.sha512",
     "C:\\Users\\bLinK\\.nuget\\packages\\humanizer.core\\2.14.1\\humanizer.core.2.14.1.nupkg.sha512",
+    "C:\\Users\\bLinK\\.nuget\\packages\\libphonenumber-csharp\\8.13.45\\libphonenumber-csharp.8.13.45.nupkg.sha512",
     "C:\\Users\\bLinK\\.nuget\\packages\\microsoft.aspnetcore.authentication.jwtbearer\\8.0.8\\microsoft.aspnetcore.authentication.jwtbearer.8.0.8.nupkg.sha512",
     "C:\\Users\\bLinK\\.nuget\\packages\\microsoft.bcl.asyncinterfaces\\6.0.0\\microsoft.bcl.asyncinterfaces.6.0.0.nupkg.sha512",
     "C:\\Users\\bLinK\\.nuget\\packages\\microsoft.codeanalysis.analyzers\\3.3.3\\microsoft.codeanalysis.analyzers.3.3.3.nupkg.sha512",

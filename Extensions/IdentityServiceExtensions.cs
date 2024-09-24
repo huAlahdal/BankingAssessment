@@ -17,7 +17,7 @@ public static class IdentityServiceExtensions
 		}).AddJwtBearer(options => {
             var secretkey = config.GetSection("JwtSettings")["secretKey"] ?? throw new Exception("Tokenkey not found");
             options.TokenValidationParameters = new TokenValidationParameters {
-                IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(secretkey)),
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretkey)),
                 ValidateIssuerSigningKey = true,
                 ValidateIssuer = false,
                 ValidateAudience = false,

@@ -1,5 +1,8 @@
 using System;
 using banking.Data;
+using banking.Interfaces;
+using banking.Repository;
+using banking.Services;
 using Microsoft.EntityFrameworkCore;
 
 namespace banking.Extensions;
@@ -13,8 +16,7 @@ public static class ApplicationServiceExtensions
             opt.AddPolicy("CorsPolicy", builder => builder
             .AllowAnyHeader()
             .AllowAnyMethod()
-            .AllowAnyOrigin()
-            .AllowCredentials());
+            .AllowAnyOrigin());
         });
 
         services.AddControllers();
@@ -25,6 +27,13 @@ public static class ApplicationServiceExtensions
         services.AddDbContext<DataContext>(options => {
             options.UseSqlite(config.GetConnectionString("DefaultConnection"));
         });
+
+        services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
+        
+        services.AddScoped<ITokenService, TokenService>();
+        services.AddScoped<IAuthenticationRepository, AuthenticationRepository>();
+        services.AddScoped<IClientRepository, ClientRepository>();
 
         return services;
     }
