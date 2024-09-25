@@ -15,7 +15,7 @@ public static class IdentityServiceExtensions
 			opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
 			opt.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
 		}).AddJwtBearer(options => {
-            var secretkey = config.GetSection("JwtSettings")["secretKey"] ?? throw new Exception("Tokenkey not found");
+            var secretkey = config.GetSection("JwtSettings")["SecretKey"] ?? throw new Exception("Tokenkey not found");
             options.TokenValidationParameters = new TokenValidationParameters {
                 IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretkey)),
                 ValidateIssuerSigningKey = true,

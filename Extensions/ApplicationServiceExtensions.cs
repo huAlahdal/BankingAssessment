@@ -34,6 +34,7 @@ public static class ApplicationServiceExtensions
         services.AddScoped<ITokenService, TokenService>();
         services.AddScoped<IAuthenticationRepository, AuthenticationRepository>();
         services.AddScoped<IClientRepository, ClientRepository>();
+        services.AddScoped<IParamsHistoryService, ParamsHistoryService>();
 
         return services;
     }

@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using banking.Data;
 
@@ -10,9 +11,11 @@ using banking.Data;
 namespace banking.Data.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20240925124923_updatedEntitesAddedHistory")]
+    partial class updatedEntitesAddedHistory
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.8");
@@ -37,7 +40,7 @@ namespace banking.Data.Migrations
 
                     b.HasIndex("ClientId");
 
-                    b.ToTable("Accounts", (string)null);
+                    b.ToTable("Accounts");
                 });
 
             modelBuilder.Entity("banking.Entities.Address", b =>
@@ -69,7 +72,7 @@ namespace banking.Data.Migrations
                     b.HasIndex("ClientId")
                         .IsUnique();
 
-                    b.ToTable("Addresses", (string)null);
+                    b.ToTable("Addresses");
                 });
 
             modelBuilder.Entity("banking.Entities.Client", b =>
@@ -107,7 +110,7 @@ namespace banking.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Clients", (string)null);
+                    b.ToTable("Clients");
                 });
 
             modelBuilder.Entity("banking.Entities.ClientParamsHistory", b =>
@@ -142,7 +145,7 @@ namespace banking.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("clientParamsHistory", (string)null);
+                    b.ToTable("clientParamsHistory");
                 });
 
             modelBuilder.Entity("banking.Entities.SearchHistory", b =>
@@ -162,7 +165,7 @@ namespace banking.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("SearchHistories", (string)null);
+                    b.ToTable("SearchHistories");
                 });
 
             modelBuilder.Entity("banking.Entities.User", b =>
@@ -189,7 +192,7 @@ namespace banking.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Users", (string)null);
+                    b.ToTable("Users");
                 });
 
             modelBuilder.Entity("banking.Entities.Account", b =>

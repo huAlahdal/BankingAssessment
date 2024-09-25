@@ -10,6 +10,7 @@ public class RegisterDto
     public string Username { get; set; }
     [Required]
     public string Password { get; set; }
-    [Range(1, 2, ErrorMessage = "Invalid role. RoleId must be 1 for user or 2 for admin.")]
-    public RoleEnum RoleId { get; set; } // 1 for user and 2 for admin
+    [Required]
+    [RegularExpression("^(Admin|User)$", ErrorMessage = "Gender must be either 'Admin' or 'User'.")]
+    public string Role { get; set; } // 1 for user and 2 for admin
 }

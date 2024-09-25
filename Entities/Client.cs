@@ -13,13 +13,13 @@ public enum Genders
 public class Client
 {
     public int Id { get; set; }
-    public string PersonalId { get; set; }
-    public string Email { get; set; }
-    public string FirstName { get; set; }
-    public string LastName { get; set; }
+    public required string PersonalId { get; set; }
+    public required string Email { get; set; }
+    public required string FirstName { get; set; }
+    public required string LastName { get; set; }
     public byte[]? ProfilePhoto { get; set; }
-    public string MobileNumber { get; set; }    
-    public Genders Sex { get; set; }
-    public Address? Address { get; set; }
-    public List<Account> Accounts { get; set; }
+    public required string MobileNumber { get; set; }    
+    public required string Sex { get; set; }
+    public required Address Address { get; set; }
+    public required List<Account> Accounts { get; set; }
 }

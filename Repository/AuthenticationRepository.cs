@@ -40,7 +40,7 @@ public class AuthenticationRepository(DataContext context) : IAuthenticationRepo
             Username = registerDto.Username,
             PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(registerDto.Password)),
             PasswordSalt = hmac.Key,
-            Role = registerDto.RoleId
+            Role = registerDto.Role
         };
         await context.Users.AddAsync(user);
         await context.SaveChangesAsync();

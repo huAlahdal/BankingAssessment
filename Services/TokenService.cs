@@ -26,7 +26,7 @@ public class TokenService(IConfiguration config) : ITokenService
 
         var tokenOptions = new JwtSecurityToken(
             claims: claims,
-            expires: DateTime.UtcNow.AddDays(Convert.ToDouble(jwtSettings["expires"])),
+            expires: DateTime.UtcNow.AddDays(Convert.ToDouble(jwtSettings["Expires"])),
             signingCredentials: signingCredentials
         );
 
@@ -38,8 +38,8 @@ public class TokenService(IConfiguration config) : ITokenService
         
         var claims = new List<Claim>
         {
-            new(ClaimTypes.NameIdentifier, user.Username),
-            new(ClaimTypes.Role, Enum.GetName(user.Role) ?? ""),
+            new(ClaimTypes.NameIdentifier, user.Id.ToString()),
+            new(ClaimTypes.Role, user.Role),
         };
         return claims;
     }
@@ -47,7 +47,7 @@ public class TokenService(IConfiguration config) : ITokenService
     public SigningCredentials GetSigningCredentials()
     {
         var jwtConfig = config.GetSection("JwtSettings");
-        var securityKey = jwtConfig["secretKey"] ?? throw new Exception("The JWT secret key is not configured.");
+        var securityKey = jwtConfig["SecretKey"] ?? throw new Exception("The JWT secret key is not configured.");
 
         var secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(securityKey));
 
@@ -59,7 +59,7 @@ public class TokenService(IConfiguration config) : ITokenService
         var jwtSettings = config.GetSection("JwtSettings");
         context.Response.Cookies.Append("accessToken", token, new CookieOptions
         {
-            Expires = DateTime.UtcNow.AddDays(Convert.ToDouble(jwtSettings["expires"])),
+            Expires = DateTime.UtcNow.AddDays(Convert.ToDouble(jwtSettings["Expires"])),
             HttpOnly = true,
             Secure = true,
             SameSite = SameSiteMode.None

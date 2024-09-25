@@ -1,49 +1,62 @@
+using System.Security.Claims;
+using System.Text.Json;
 using banking.DTOs;
-using banking.Entities;
+using banking.Extensions;
+using banking.Helpers;
 using banking.Interfaces;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace banking.Controllers
 {
+    [Authorize(Roles = "Admin")]
     [Route("api/[controller]")]
     [ApiController]
     public class ClientController(IClientRepository clientRepository) : ControllerBase
     {
         [HttpGet]
-        public async Task<ActionResult<List<ClientDto>>> GetAllClients()
+        public async Task<ActionResult<List<ClientDto>>> GetAllClients([FromQuery]ClientParams clientParams)
         {
-            var clients = await clientRepository.GetClients();
+            var clients = await clientRepository.GetClients(clientParams, User.GetUserId());
+            Response.AddPaginationHeader(clients);
             return Ok(clients);
         }
 
-        [HttpGet("{id}")]
-        public async Task<ActionResult<ClientDto>> GetClientById(int id)
+        [HttpGet("{personalId}")]
+        public async Task<ActionResult<ClientDto>?> GetClientByPersonalId(string personalId)
         {
-            var client = await clientRepository.GetClientById(id);
+            var client = await clientRepository.GetClientByPersonalId(personalId, User.GetUserId());
             if (client == null) return NotFound("Client not found.");
             return Ok(client);
         }
 
+        [HttpGet("Suggestions")]
+        public async Task<ActionResult<List<SearchHistoryDto>>> GetSuggestions()
+        {
+            var Suggestions = await clientRepository.GetSearchSuggestions(User.GetUserId());
+            return Ok(Suggestions);
+        }
+
         [HttpPost]
-        public async Task<IActionResult> AddClient(ClientDto client)
+        public async Task<IActionResult> AddClient(CreateClientDto client)
         {
             await clientRepository.CreateClient(client);
             return Created();
         }
 
         [HttpPut("{id}")]
-        public IActionResult UpdateClient(int id, ClientDto client)
+        public async Task<IActionResult> UpdateClient(int id, UpdateClientDto client)
         {
-            clientRepository.UpdateClient(id, client);
+            if (await clientRepository.UpdateClient(id, client) == false) return NotFound("Client not found.");
+
             return NoContent();
         }
 
         [HttpDelete("{id}")]
-        public IActionResult DeleteClient(int id)
+        public async Task<IActionResult> DeleteClient(int id)
         {
-            clientRepository.RemoveClient(id);
+            if (await clientRepository.RemoveClient(id) == false) return NotFound("Client not found.");
+
             return NoContent();
         }
     }
