@@ -1,0 +1,8 @@
+# ignore ALL .log files
+*.db
+*-shm
+*-wal
+
+# ignore ALL files in ANY directory named temp
+bin/
+obj/
