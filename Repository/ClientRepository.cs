@@ -25,7 +25,7 @@ public class ClientRepository(DataContext context, IMapper mapper, IParamsHistor
 
     public async Task<ClientDto?> GetClientByPersonalId(string personalId, int userId)
     {
-        var client = await context.Clients.ProjectTo<ClientDto>(mapper.ConfigurationProvider).FirstOrDefaultAsync(x => x.PersonalId == personalId);
+        var client = await _context.Clients.ProjectTo<ClientDto>(_mapper.ConfigurationProvider).FirstOrDefaultAsync(x => x.PersonalId == personalId);
 
         if (client != null)
         {
@@ -131,7 +131,7 @@ public class ClientRepository(DataContext context, IMapper mapper, IParamsHistor
     // Separate method to check if the current search is in recent searches
     private async Task<bool> HasRecentSearch(string personalId, int userId)
     {
-        var recentSearches = await context.SearchHistories
+        var recentSearches = await _context.SearchHistories
             .Where(x => x.UserId == userId)
             .OrderByDescending(x => x.SearchDate)
             .Take(3)
@@ -143,13 +143,13 @@ public class ClientRepository(DataContext context, IMapper mapper, IParamsHistor
     // Separate method to add a new search history record
     private async Task AddSearchHistoryAsync(int userId, string personalId)
     {
-        context.SearchHistories.Add(new SearchHistory
+        _context.SearchHistories.Add(new SearchHistory
         {
             UserId = userId,
             PersonalId = personalId,
             SearchDate = DateTime.UtcNow // Assuming you want to store the current date and time for each search
         });
 
-        await context.SaveChangesAsync();
+        await _context.SaveChangesAsync();
     }
 }
