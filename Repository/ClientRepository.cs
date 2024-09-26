@@ -118,9 +118,9 @@ public class ClientRepository(DataContext context, IMapper mapper, IParamsHistor
         // map new values to client
         _mapper.Map(updatedClient, client);
 
-        if(await SaveAllAsync()) return true;
+        await SaveAllAsync();
         
-        return false;
+        return true;
     }
 
     public void Update(Client client)
