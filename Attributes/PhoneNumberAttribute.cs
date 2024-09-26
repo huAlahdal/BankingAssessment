@@ -2,31 +2,38 @@ using System;
 using System.ComponentModel.DataAnnotations;
 using PhoneNumbers;
 
-namespace banking.Attributes;
-
-public class PhoneNumberAttribute : ValidationAttribute
+namespace banking.Attributes
 {
-
-    protected override ValidationResult IsValid(object value, ValidationContext validationContext)
+    /// Custom attribute class derived from ValidationAttribute for validating phone numbers 
+    /// using Google's libphonenumber library.
+    public class PhoneNumberAttribute : ValidationAttribute
     {
-        if (value is string mobileNumber && !string.IsNullOrEmpty(mobileNumber))
+        // Protected method to override the default validation behavior
+        protected override ValidationResult IsValid(object value, ValidationContext validationContext)
         {
-            var phoneNumberUtil = PhoneNumberUtil.GetInstance();
-            try
+            // Check if the provided value is a string and it's not null or empty
+            if (value is string mobileNumber && !string.IsNullOrEmpty(mobileNumber))
             {
-                var phoneNumber = phoneNumberUtil.Parse(mobileNumber, null);
-                if (phoneNumberUtil.IsValidNumber(phoneNumber))
+                var phoneNumberUtil = PhoneNumberUtil.GetInstance(); // Initialize Google's libphonenumber library
+
+                try
                 {
-                    return ValidationResult.Success;
+                    var phoneNumber = phoneNumberUtil.Parse(mobileNumber, null); // Parse the provided string as a phone number
+                    if (phoneNumberUtil.IsValidNumber(phoneNumber)) // Check if the parsed phone number is valid
+                    {
+                        return ValidationResult.Success; // Return success if the phone number is valid
+                    }
+                }
+                catch (NumberParseException)
+                {
+                    // Handle parse exceptions if needed (e.g., log or provide a custom error message for invalid formats)
                 }
             }
-            catch (NumberParseException)
-            {
-                // Handle parse exceptions if needed
-            }
+
+            // Return an error result with a default error message for any other case
+            return new ValidationResult("Invalid phone number"); 
+
+
         }
-
-        return new ValidationResult("Invalid phone number");
     }
-
 }

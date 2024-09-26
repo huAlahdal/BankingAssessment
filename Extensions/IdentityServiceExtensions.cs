@@ -10,6 +10,7 @@ public static class IdentityServiceExtensions
 {
     public static  IServiceCollection AddIdentityServices(this IServiceCollection services, IConfiguration config)
     {
+        // Authentication and Jwt confiuration
         services.AddAuthentication(opt =>
 		{
 			opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;

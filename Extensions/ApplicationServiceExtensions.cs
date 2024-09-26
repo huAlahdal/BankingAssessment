@@ -20,17 +20,18 @@ public static class ApplicationServiceExtensions
         });
 
         services.AddControllers();
-        // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
         services.AddEndpointsApiExplorer();
         services.AddSwaggerGen();
 
+        // Database Context
         services.AddDbContext<DataContext>(options => {
             options.UseSqlite(config.GetConnectionString("DefaultConnection"));
         });
 
+        // AutoMapper
         services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
-        
+        // Add New Services and Repsitories here
         services.AddScoped<ITokenService, TokenService>();
         services.AddScoped<IAuthenticationRepository, AuthenticationRepository>();
         services.AddScoped<IClientRepository, ClientRepository>();

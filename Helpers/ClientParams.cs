@@ -10,6 +10,7 @@ public class ClientParams : PaginationParams
     public string? Sex { get; set; }
     public string? OrderBy { get; set; }
 
+    // Check if all properties are null
     public bool AreAllPropertiesNull()
     {
         return FirstName == null && LastName == null && Sex == null && OrderBy == null && PageNumber == null && PageSize == null;

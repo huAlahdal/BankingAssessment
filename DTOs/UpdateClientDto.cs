@@ -20,5 +20,5 @@ public class UpdateClientDto
     public string? MobileNumber { get; set; }
     [RegularExpression("^(Male|Female)$", ErrorMessage = "Gender must be either 'Male' or 'Female'.")]
     public string? Sex { get; set; }
-    public AddressDto? Address { get; set; }
+    public UpdateAddressDto? Address { get; set; }
 }

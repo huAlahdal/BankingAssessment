@@ -16,15 +16,5 @@ public class DataContext(DbContextOptions<DataContext> options) : DbContext(opti
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
-
-        // modelBuilder.Entity<Client>()
-        // .HasMany(c => c.Accounts)
-        // .WithOne(c => c.Client)
-        // .HasForeignKey(c => c.ClientId);
-
-        // modelBuilder.Entity<Account>()
-        // .HasOne(c => c.Client)
-        // .WithMany(c => c.Accounts)
-        // .HasForeignKey(c => c.Id);
     }
 }

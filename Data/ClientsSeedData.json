@@ -1,0 +1,203 @@
+[
+    {
+      "personalId": "12345678901",
+      "email": "john.smith@example.com",
+      "firstName": "John",
+      "lastName": "Smith",
+      "mobileNumber": "+966550494659",
+      "sex": "Male",
+      "address": {
+        "country": "USA",
+        "city": "Los Angeles",
+        "street": "456 Elm Street",
+        "zipCode": "90001"
+      },
+      "accounts": [
+        {
+          "number": "ACC100001",
+          "balance": 2000.50
+        }
+      ]
+    },
+    {
+      "personalId": "23456789012",
+      "email": "sarah.jones@example.com",
+      "firstName": "Sarah",
+      "lastName": "Jones",
+      "mobileNumber": "+966501235849",
+      "sex": "Female",
+      "address": {
+        "country": "UK",
+        "city": "London",
+        "street": "789 King's Road",
+        "zipCode": "12345"
+      },
+      "accounts": [
+        {
+          "number": "ACC100002",
+          "balance": 5500.00
+        }
+      ]
+    },
+    {
+      "personalId": "34567890123",
+      "email": "michael.brown@example.com",
+      "firstName": "Michael",
+      "lastName": "Brown",
+      "mobileNumber": "+971501234567",
+      "sex": "Male",
+      "address": {
+        "country": "Australia",
+        "city": "Sydney",
+        "street": "101 Harbour Street",
+        "zipCode": "2000"
+      },
+      "accounts": [
+        {
+          "number": "ACC100003",
+          "balance": 3300.75
+        }
+      ]
+    },
+    {
+      "personalId": "45678901234",
+      "email": "emily.wilson@example.com",
+      "firstName": "Emily",
+      "lastName": "Wilson",
+      "mobileNumber": "+971501284569",
+      "sex": "Female",
+      "address": {
+        "country": "Canada",
+        "city": "Toronto",
+        "street": "202 Maple Avenue",
+        "zipCode": "98765"
+      },
+      "accounts": [
+        {
+          "number": "ACC100004",
+          "balance": 7500.60
+        }
+      ]
+    },
+    {
+      "personalId": "56789012345",
+      "email": "david.lee@example.com",
+      "firstName": "David",
+      "lastName": "Lee",
+      "mobileNumber": "+971501325647",
+      "sex": "Male",
+      "address": {
+        "country": "Hong Kong",
+        "city": "Hong Kong",
+        "street": "303 Kowloon Road",
+        "zipCode": "123456"
+      },
+      "accounts": [
+        {
+          "number": "ACC100005",
+          "balance": 1000.00
+        }
+      ]
+    },
+    {
+      "personalId": "67890123456",
+      "email": "olivia.jones@example.com",
+      "firstName": "Olivia",
+      "lastName": "Jones",
+      "mobileNumber": "+966550494632",
+      "sex": "Female",
+      "address": {
+        "country": "France",
+        "city": "Paris",
+        "street": "404 Rue de Rivoli",
+        "zipCode": "75001"
+      },
+      "accounts": [
+        {
+          "number": "ACC100006",
+          "balance": 2400.00
+        }
+      ]
+    },
+    {
+      "personalId": "78901234567",
+      "email": "william.miller@example.com",
+      "firstName": "William",
+      "lastName": "Miller",
+      "mobileNumber": "+971501234561",
+      "sex": "Male",
+      "address": {
+        "country": "Germany",
+        "city": "Berlin",
+        "street": "505 Alexanderplatz",
+        "zipCode": "10178"
+      },
+      "accounts": [
+        {
+          "number": "ACC100007",
+          "balance": 1250.80
+        }
+      ]
+    },
+    {
+      "personalId": "89012345678",
+      "email": "mia.davis@example.com",
+      "firstName": "Mia",
+      "lastName": "Davis",
+      "mobileNumber": "+971501244567",
+      "sex": "Female",
+      "address": {
+        "country": "Japan",
+        "city": "Tokyo",
+        "street": "606 Shibuya Street",
+        "zipCode": "1500001"
+      },
+      "accounts": [
+        {
+          "number": "ACC100008",
+          "balance": 3100.20
+        }
+      ]
+    },
+    {
+      "personalId": "90123456789",
+      "email": "noah.moore@example.com",
+      "firstName": "Noah",
+      "lastName": "Moore",
+      "mobileNumber": "+966504965185",
+      "sex": "Male",
+      "address": {
+        "country": "Brazil",
+        "city": "São Paulo",
+        "street": "707 Paulista Avenue",
+        "zipCode": "12345678"
+      },
+      "accounts": [
+        {
+          "number": "ACC100009",
+          "balance": 2200.95
+        }
+      ]
+    },
+    {
+      "personalId": "01234567890",
+      "email": "isabella.rodriguez@example.com",
+      "firstName": "Isabella",
+      "lastName": "Rodriguez",
+      "mobileNumber": "+12124567890",
+      "sex": "Female",
+      "address": {
+        "country": "Spain",
+        "city": "Madrid",
+        "street": "808 Gran Via",
+        "zipCode": "28013"
+      },
+      "accounts": [
+        {
+          "number": "ACC100010",
+          "balance": 5000.00
+        }
+      ]
+    }
+  ]
+  

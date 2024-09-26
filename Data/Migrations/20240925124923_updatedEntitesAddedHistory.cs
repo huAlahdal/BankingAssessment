@@ -44,7 +44,7 @@ namespace banking.Data.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_clientParamsHistory", x => x.Id);
+                    table.PrimaryKey("PK_ClientParamsHistory", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -66,9 +66,6 @@ namespace banking.Data.Migrations
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropTable(
-                name: "clientParamsHistory");
-
             migrationBuilder.DropTable(
                 name: "SearchHistories");
 

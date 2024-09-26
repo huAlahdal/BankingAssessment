@@ -6,6 +6,8 @@ namespace banking.Extensions;
 
 public static class HttpExtensions
 {
+    // AddPaginationHeader is an extension method for the HttpResponse class 
+    // that adds a pagination header to the response.
     public static void AddPaginationHeader<T>(this HttpResponse response, PagedList<T> data)
     {
         var paginationHeader = new PaginationHeader(data.CurrentPage, data.PageSize, 

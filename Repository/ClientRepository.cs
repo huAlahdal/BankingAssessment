@@ -12,10 +12,14 @@ namespace banking.Repository;
 
 public class ClientRepository(DataContext context, IMapper mapper, IParamsHistoryService paramsHistory) : IClientRepository
 {
+    private readonly DataContext _context = context;
+    private readonly IMapper _mapper = mapper;
+    private readonly IParamsHistoryService _paramsHistory = paramsHistory;
+
     public async Task CreateClient(CreateClientDto client)
     {
-        var clientMap = mapper.Map<Client>(client);
-        await context.Clients.AddAsync(clientMap);
+        var clientMap = _mapper.Map<Client>(client);
+        await _context.Clients.AddAsync(clientMap);
         await SaveAllAsync();
     }
 
@@ -23,100 +27,98 @@ public class ClientRepository(DataContext context, IMapper mapper, IParamsHistor
     {
         var client = await context.Clients.ProjectTo<ClientDto>(mapper.ConfigurationProvider).FirstOrDefaultAsync(x => x.PersonalId == personalId);
 
-        // get 3 most recent searches for the user
-        var recentSearches = await context.SearchHistories
-        .Where(x => x.UserId == userId)
-        .OrderByDescending(x => x.SearchDate)
-        .ProjectTo<SearchHistoryDto>(mapper.ConfigurationProvider)
-        .Take(3)
-        .ToListAsync();
-
-        // if the current search is not in the search history, add it to the search history
-        if (client != null && !recentSearches.Any(x => x.PersonalId == personalId)) 
+        if (client != null)
         {
-            // Add the current search to the search history
-            context.SearchHistories.Add(new SearchHistory
+            // Check and add to search history in a separate query
+            bool shouldAddToHistory = !await HasRecentSearch(personalId, userId);
+            if (shouldAddToHistory)
             {
-                UserId = userId, // Replace with actual user ID
-                PersonalId = personalId
-            });
-
-            await context.SaveChangesAsync();
+                await AddSearchHistoryAsync(userId, personalId);
+            }
         }
-        
 
         return client;
     }
 
     public async Task<PagedList<ClientDto>> GetClients(ClientParams clientParams, int userId)
     {
-        var query = context.Clients.AsQueryable();
+        // Initialize query to target the Clients table
+        var query = _context.Clients.AsQueryable();
 
-        // Apply filters
+        // Apply filters only if client parameters are provided
         if (!string.IsNullOrWhiteSpace(clientParams.FirstName))
-            query = query.Where(x => x.FirstName.ToLower().Contains(clientParams.FirstName.ToLower()));
-        
+        {
+            string lowerFirstName = clientParams.FirstName.ToLower();
+            query = query.Where(x => x.FirstName.ToLower().Contains(lowerFirstName));
+        }
+
         if (!string.IsNullOrWhiteSpace(clientParams.LastName))
-            query = query.Where(x => x.LastName.ToLower().Contains(clientParams.LastName.ToLower()));
+        {
+            string lowerLastName = clientParams.LastName.ToLower();
+            query = query.Where(x => x.LastName.ToLower().Contains(lowerLastName));
+        }
 
         if (!string.IsNullOrWhiteSpace(clientParams.Sex))
-            query = query.Where(x => x.Sex.ToLower() == clientParams.Sex.ToLower());
+        {
+            string lowerSex = clientParams.Sex.ToLower();
+            query = query.Where(x => x.Sex.ToLower() == lowerSex);
+        }
 
-        // Apply ordering
+        // Apply ordering based on the provided 'OrderBy' parameter, default to ordering by 'Id'
         query = clientParams.OrderBy switch
         {
-            "FirstName" => query.OrderByDescending(x => x.FirstName),
-            "LastName" => query.OrderByDescending(x => x.LastName),
-            "Sex" => query.OrderByDescending(x => x.Sex),
-            "PersonalId" => query.OrderByDescending(x => x.PersonalId),
+            "fisrtname" => query.OrderByDescending(x => x.FirstName),
+            "lastname" => query.OrderByDescending(x => x.LastName),
+            "sex" => query.OrderByDescending(x => x.Sex),
+            "personalid" => query.OrderByDescending(x => x.PersonalId),
             _ => query.OrderBy(x => x.Id)
         };
 
-        // Save search history if clientParams provided
+        // Check if any filters were applied and save search parameters history for the user
         if (!clientParams.AreAllPropertiesNull())
-            await paramsHistory.AddParamsHistory(clientParams, userId);
+        {
+            await _paramsHistory.AddParamsHistory(clientParams, userId);
+        }
 
-        // Return paginated result
+        // Project the query to ClientDto and apply pagination before fetching the results
         return await PagedList<ClientDto>.CreateAsync(
-            query.ProjectTo<ClientDto>(mapper.ConfigurationProvider),
-            clientParams.PageNumber ?? 1,
-            clientParams.PageSize ?? 10
+            query.ProjectTo<ClientDto>(_mapper.ConfigurationProvider),  // Use AutoMapper's ProjectTo for projection
+            clientParams.PageNumber ?? 1,  // Default to page 1 if no page number provided
+            clientParams.PageSize ?? 10    // Default to page size of 10 if not provided
         );
     }
 
+
     public async Task<List<SearchHistoryDto>?> GetSearchSuggestions(int userId, int limit = 3)
     {
-        return await context.SearchHistories
+        return await _context.SearchHistories
         .Where(x => x.UserId == userId)
         .OrderByDescending(x => x.SearchDate)
-        .ProjectTo<SearchHistoryDto>(mapper.ConfigurationProvider)
+        .ProjectTo<SearchHistoryDto>(_mapper.ConfigurationProvider)
         .Take(limit)
         .ToListAsync();
     }
 
     public async Task<bool> RemoveClient(int clientId)
     {
-        var client = await context.Clients.FirstOrDefaultAsync(x => x.Id == clientId);
+        var client = await _context.Clients.FirstOrDefaultAsync(x => x.Id == clientId);
         if (client == null) return false;
-        context.Clients.Remove(client);
+        _context.Clients.Remove(client);
         return await SaveAllAsync();
     }
 
     public async Task<bool> SaveAllAsync()
     {
-        return await context.SaveChangesAsync() > 0;
+        return await _context.SaveChangesAsync() > 0;
     }
 
     public async Task<bool> UpdateClient(int id, UpdateClientDto updatedClient)
     {
-        Console.WriteLine(JsonSerializer.Serialize(updatedClient));
-        var client = await context.Clients.Include(x => x.Address).SingleOrDefaultAsync(x => x.Id == id);
+        var client = await _context.Clients.Include(x => x.Address).SingleOrDefaultAsync(x => x.Id == id);
         if (client == null) return false;
 
         // map new values to client
-        mapper.Map(updatedClient, client);
-
-        Update(client);
+        _mapper.Map(updatedClient, client);
 
         if(await SaveAllAsync()) return true;
         
@@ -125,6 +127,31 @@ public class ClientRepository(DataContext context, IMapper mapper, IParamsHistor
 
     public void Update(Client client)
     {
-        context.Entry(client).State = EntityState.Modified;
+        _context.Entry(client).State = EntityState.Modified;
+    }
+
+    // Separate method to check if the current search is in recent searches
+    private async Task<bool> HasRecentSearch(string personalId, int userId)
+    {
+        var recentSearches = await context.SearchHistories
+            .Where(x => x.UserId == userId)
+            .OrderByDescending(x => x.SearchDate)
+            .Take(3)
+            .ToListAsync();
+
+        return recentSearches.Any(x => x.PersonalId == personalId);
+    }
+
+    // Separate method to add a new search history record
+    private async Task AddSearchHistoryAsync(int userId, string personalId)
+    {
+        context.SearchHistories.Add(new SearchHistory
+        {
+            UserId = userId,
+            PersonalId = personalId,
+            SearchDate = DateTime.UtcNow // Assuming you want to store the current date and time for each search
+        });
+
+        await context.SaveChangesAsync();
     }
 }
