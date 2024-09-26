@@ -1,5 +1,7 @@
 using System;
 using System.Text.Json;
+using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using banking.Data;
 using banking.Entities;
 using banking.Helpers;
@@ -12,9 +14,9 @@ public class ParamsHistoryService(DataContext context) : IParamsHistoryService
 {
     private readonly DataContext _context = context;
 
-    public async Task AddParamsHistory(ClientParams clientParams, int userId)
+   public async Task AddParamsHistory(ClientParams clientParams, int userId)
     {
-        // Create a new ClientParamsHistory object and populate with provided client parameters
+        // Create a new ClientParamsHistory object with null-coalescing operator for defaults
         var newHistory = new ClientParamsHistory
         {
             UserId = userId,
@@ -22,16 +24,35 @@ public class ParamsHistoryService(DataContext context) : IParamsHistoryService
             LastName = clientParams.LastName,
             Sex = clientParams.Sex,
             OrderBy = clientParams.OrderBy,
-            PageNumber = clientParams.PageNumber ?? 1, // Default to 1 if PageNumber is null
-            PageSize = clientParams.PageSize ?? 10     // Default to 10 if PageSize is null
+            PageNumber = clientParams.PageNumber ?? 1,
+            PageSize = clientParams.PageSize ?? 10
         };
 
-        // Add the new history entry to the context
+        // Retrieve the last history entry and project necessary fields
+        var lastHistory = await _context.ClientParamsHistory
+            .Where(x => x.UserId == userId)
+            .OrderByDescending(x => x.ParamsDate)
+            .Select(x => new { x.FirstName, x.LastName, x.Sex, x.OrderBy, x.PageNumber, x.PageSize })
+            .FirstOrDefaultAsync();
+
+        // Return if the new history matches the last one
+        if (lastHistory != null && 
+            clientParams.FirstName == lastHistory.FirstName &&
+            clientParams.LastName == lastHistory.LastName &&
+            clientParams.Sex == lastHistory.Sex &&
+            clientParams.OrderBy == lastHistory.OrderBy &&
+            clientParams.PageNumber == lastHistory.PageNumber &&
+            clientParams.PageSize == lastHistory.PageSize)
+        {
+            return;
+        }
+
+        // Add the new history entry and save changes
         await _context.ClientParamsHistory.AddAsync(newHistory);
-        
-        // Save changes to the database in a single transaction
         await _context.SaveChangesAsync();
     }
+
+
 
     public async Task<ClientParams> GetParamsHistory(int userId)
     {

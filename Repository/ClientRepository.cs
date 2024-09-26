@@ -74,11 +74,9 @@ public class ClientRepository(DataContext context, IMapper mapper, IParamsHistor
             _ => query.OrderBy(x => x.Id)
         };
 
-        // Check if any filters were applied and save search parameters history for the user
-        if (!clientParams.AreAllPropertiesNull())
-        {
-            await _paramsHistory.AddParamsHistory(clientParams, userId);
-        }
+        //save search parameters history for the user
+        await _paramsHistory.AddParamsHistory(clientParams, userId);
+
 
         // Project the query to ClientDto and apply pagination before fetching the results
         return await PagedList<ClientDto>.CreateAsync(
